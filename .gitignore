@@ -1,0 +1,23 @@
+# Ambiente virtual
+venv_casting/
+venv/
+.env
+
+# Dados confidenciais
+data/raw/
+data/processed/
+data/external/
+*.csv
+*.xlsx
+*.xls
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.pyc
+
+# Sistema
+.DS_Store
+Thumbs.db
