@@ -1,23 +1,49 @@
-# Ambiente virtual
-venv_casting/
+# Ambientes virtuais
 venv/
-.env
+venv_casting/
+env/
+.env/
+.venv/
 
-# Dados confidenciais
+# Arquivos de dados (não versionar dados brutos nem processados)
 data/raw/
 data/processed/
-data/external/
 *.csv
 *.xlsx
 *.xls
 
-# Jupyter
-.ipynb_checkpoints/
+# Modelos treinados
+models/*.pkl
+models/*.joblib
 
-# Python
+# Arquivos de cache Python
 __pycache__/
 *.pyc
+*.pyo
 
-# Sistema
+# Logs e outputs temporários
+outputs/
+logs/
+*.log
+
+# Arquivos de configuração local
+config_local.py
+.env
+
+# Notebooks 
+*.ipynb
+
+# Arquivos de apresentação (muito grandes)
+presentation/*.pptx
+presentation/*.pdf
+reports/*.pdf
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
 Thumbs.db
