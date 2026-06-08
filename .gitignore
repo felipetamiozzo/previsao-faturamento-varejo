@@ -22,7 +22,7 @@ __pycache__/
 *.pyo
 
 # Logs e outputs temporários
-outputs/
+# outputs/   <-- COMENTADO para permitir versionar as imagens do dashboard
 logs/
 *.log
 
@@ -31,7 +31,7 @@ config_local.py
 .env
 
 # Notebooks 
-*.ipynb
+# *.ipynb   <-- COMENTADO para permitir versionar os notebooks
 
 # Arquivos de apresentação (muito grandes)
 presentation/*.pptx
