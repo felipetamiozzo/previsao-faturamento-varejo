@@ -100,9 +100,9 @@ with tab3:
     
     st.subheader("Comparação de Modelos")
     metrics_df = pd.DataFrame({
-        'Modelo': ['Baseline MM3', 'Regressão Linear', 'Random Forest Base', 'Random Forest Tunado', 'XGBoost'],
-        'MAPE (%)': [14.75, 253.01, 11.16, 11.73, 13.72]
-    })
+    'Modelo': ['Baseline MM3', 'Random Forest Base', 'Random Forest Tunado', 'XGBoost'],
+    'MAPE (%)': [14.75, 11.16, 11.73, 13.72]
+})
     fig = px.bar(metrics_df, x='Modelo', y='MAPE (%)', color='Modelo', 
                  title="MAPE por Modelo", text='MAPE (%)')
     fig.update_traces(texttemplate='%{text:.1f}%', textposition='outside')
