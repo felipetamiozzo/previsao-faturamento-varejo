@@ -65,7 +65,7 @@ with tab1:
         fig.update_xaxes(tickformat="%b %Y", tickmode="array", tickvals=pred_cons['PERIODO_MES'])
         fig.update_yaxes(tickprefix="R$ ", tickformat=",.0f")
         fig.update_traces(text=pred_cons['PREVISAO'].apply(lambda x: f'R$ {x/1e6:.1f}M'), textposition="top center")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')  # alterado
 
         # Tabela filtrada pela loja selecionada
         st.subheader("Valores Previstos por Loja")
@@ -86,7 +86,7 @@ with tab2:
                       markers=True)
         fig.update_layout(yaxis_title="Faturamento (R$)", xaxis_title="Mês")
         fig.update_yaxes(tickprefix="R$ ", tickformat=",.0f")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')  # alterado
     else:
         st.warning("Selecione uma loja no menu lateral.")
 
@@ -107,7 +107,7 @@ with tab3:
                  title="MAPE por Modelo", text='MAPE (%)')
     fig.update_traces(texttemplate='%{text:.1f}%', textposition='outside')
     fig.update_layout(showlegend=False, yaxis_title="MAPE (%)", xaxis_title="Modelo")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')  # alterado
 
 st.sidebar.markdown("---")
 st.sidebar.info("Grupo 1 - Desenvolvido para a Solução Casting | Projeto DNC")
