@@ -1,4 +1,4 @@
-
+Atualizei o `README.md` com as imagens fornecidas, renomeando-as de forma descritiva e organizando a exibição. As imagens foram colocadas na pasta `outputs/` e referenciadas no documento. Abaixo está o conteúdo final do `README.md` ajustado. Substitua o arquivo existente por este.
 
 ```markdown
 # Solução Casting - Previsão de Faturamento
@@ -16,6 +16,26 @@ Dashboard interativo e modelo preditivo para previsão de faturamento líquido m
   - Histórico de faturamento por loja.
   - Métricas do modelo e comparação com outros algoritmos.
 - Modelo treinado com validação temporal (TimeSeriesSplit).
+
+## 📈 Resultados e Gráficos
+
+### 1. Comparação de Modelos (MAPE)
+
+O gráfico abaixo mostra o desempenho dos modelos testados. O **Random Forest Base** foi o melhor, com MAPE de 11,16%, superando o Baseline e outros algoritmos.
+
+![Comparação de Modelos](outputs/comparacao_modelos.png)
+
+### 2. Real vs Previsto – Período de Teste (jul–set/2023)
+
+Acurácia do modelo no período de teste, mostrando boa aderência entre valores reais e previstos.
+
+![Real vs Previsto](outputs/real_vs_previsto_melhor_modelo.png)
+
+### 3. Previsão Futura – Próximos 3 Meses
+
+Projeção de faturamento consolidado para outubro, novembro e dezembro de 2023, com destaque para o pico sazonal em dezembro.
+
+![Previsão Futura](outputs/previsao_futura.png)
 
 ## 🚀 Como executar
 
@@ -65,20 +85,14 @@ casting-previsao/
 │   └── processed/            # Dados processados (não versionados)
 ├── models/                   # Modelo treinado (rf_base_model.pkl)
 ├── notebooks/                # Notebooks de exploração e modelagem
-├── outputs/                  # Gráficos e resultados (opcional)
+├── outputs/                  # Gráficos e resultados (imagens do README)
 ├── src/                      # Módulos auxiliares (data_cleaning, features, etc.)
 ├── .gitignore
 ├── README.md
 └── requirements.txt
 ```
 
-## 📈 Resultados
-
-- **Modelo final:** Random Forest Base
-- **MAPE:** 11,16% (melhor que Baseline MM3 com 14,75%)
-- **Previsão para dezembro/2023:** R$ 104,6 M (consolidado)
-
-### Comparação de Modelos
+## 📋 Tabela de Métricas
 
 | Modelo                | MAPE (%) |
 |-----------------------|----------|
@@ -96,8 +110,6 @@ O dashboard permite filtrar por loja e visualizar:
 - Histórico real da loja
 - Métricas globais do modelo
 
-![Dashboard Preview](outputs/dashboard_sample.png) *(adicione uma imagem se desejar)*
-
 ## 👥 Desenvolvido por
 
 Grupo 1 – Solução Casting | Projeto DNC
@@ -107,24 +119,3 @@ Grupo 1 – Solução Casting | Projeto DNC
 Este projeto é de uso interno da empresa. Não redistribuir sem autorização.
 ```
 
-> **Observação:** Substitua `seu-usuario` pelo nome real do repositório. Se não quiser incluir a imagem, remova a linha do `Dashboard Preview`.
-
----
-
-## 3. Instruções adicionais
-
-- **Arquivos a serem commitados:**  
-  - `app/app.py` (código final corrigido)  
-  - `src/` (todos os `.py` de apoio, se existirem e estiverem completos)  
-  - `notebooks/` (opcional – notebooks limpos, sem dados sensíveis)  
-  - `requirements.txt`  
-  - `.gitignore`  
-  - `README.md`  
-  - `models/rf_base_model.pkl` (se optar por versionar)  
-  - `outputs/` (apenas imagens, se quiser documentar)  
-
-- **Não commitar:** pastas `data/raw`, `data/processed`, `venv/`, `__pycache__/`, `presentation/` (se conter slides finais grandes), `reports/`.
-
-- **Antes do commit, verifique se não há senhas ou caminhos absolutos nos arquivos.**
-
-Caso precise de ajuda para gerar o `requirements.txt` definitivo ou para ajustar a estrutura, é só pedir.

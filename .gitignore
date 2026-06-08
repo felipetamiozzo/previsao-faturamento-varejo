@@ -5,16 +5,16 @@ env/
 .env/
 .venv/
 
-# Arquivos de dados (não versionar dados brutos nem processados)
+# Arquivos de dados (não versionar dados brutos, mas processados podem ser versionados em repositório privado)
 data/raw/
-data/processed/
-*.csv
+# data/processed/   # permitido
+# *.csv             # permitido (repositório privado)
 *.xlsx
 *.xls
 
-# Modelos treinados
-models/*.pkl
-models/*.joblib
+# Modelos treinados (permitido versionar em repositório privado)
+# models/*.pkl
+# models/*.joblib
 
 # Arquivos de cache Python
 __pycache__/
@@ -22,7 +22,7 @@ __pycache__/
 *.pyo
 
 # Logs e outputs temporários
-# outputs/   <-- COMENTADO para permitir versionar as imagens do dashboard
+# outputs/           # permitido (imagens do dashboard)
 logs/
 *.log
 
@@ -30,8 +30,8 @@ logs/
 config_local.py
 .env
 
-# Notebooks 
-# *.ipynb   <-- COMENTADO para permitir versionar os notebooks
+# Notebooks (permitido versionar)
+# *.ipynb
 
 # Arquivos de apresentação (muito grandes)
 presentation/*.pptx
@@ -46,4 +46,5 @@ reports/*.pdf
 
 # OS
 .DS_Store
-Thumbs.db
+Thumbs.dbdata/processed/df_tratado.csv
+data/processed/df_tratado.csv
