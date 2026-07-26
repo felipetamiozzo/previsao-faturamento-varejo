@@ -1,89 +1,276 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
-def gerar_previsoes(modelo, df_historico: pd.DataFrame, periodos, limite_crescimento: float = 1.2) -> pd.DataFrame:
-    """
-    Gera previsões recursivas para múltiplos períodos.
-    
-    Parâmetros:
-    - modelo: modelo sklearn compatível (com .predict)
-    - df_historico: DataFrame histórico completo (já com features)
-    - periodos: lista de datas ou número de períodos
-    - limite_crescimento: fator máximo de crescimento mensal (ex: 1.2 = 20%)
-    """
-    from copy import deepcopy
-    
+
+
+# ============================================================
+# FEATURES UTILIZADAS NA PREVISÃO
+# ============================================================
+
+# Mesmas variáveis utilizadas durante o treinamento do modelo.
+# Mantém consistência entre treino e previsão.
+FEATURES = [
+    "loja",
+    "ano",
+    "mes",
+    "trimestre",
+    "indice_tempo",
+    "lag_1_mes",
+    "lag_2_meses",
+    "lag_3_meses",
+    "media_movel_3m",
+    "taxa_crescimento",
+    "mes_seno",
+    "mes_cosseno",
+]
+
+
+
+# ============================================================
+# GERAÇÃO DAS PREVISÕES FUTURAS
+# ============================================================
+
+def gerar_previsoes(
+    modelo,
+    df_historico: pd.DataFrame,
+    periodos,
+    limite_taxa_crescimento: float = 1.2
+):
+
+
+    # Caso seja informado apenas a quantidade de meses,
+    # cria automaticamente os próximos períodos futuros.
     if isinstance(periodos, int):
-        # Gerar datas automaticamente (ex: 3 meses à frente)
-        ultima_data = df_historico['PERIODO_MES'].max()
-        periodos = pd.date_range(start=ultima_data + pd.DateOffset(months=1), periods=periodos, freq='MS')
-    
-    lojas = df_historico['CLV_BANCO'].unique()
+
+        ultima_data = (
+            df_historico["mes_referencia"]
+            .max()
+        )
+
+
+        periodos = pd.date_range(
+            start=ultima_data + pd.DateOffset(months=1),
+            periods=periodos,
+            freq="MS"
+        )
+
+
+
+    # Lista que armazenará todas as previsões geradas
     previsoes = []
-    
+
+
+    # Obtém todas as lojas existentes na base histórica
+    lojas = df_historico["loja"].unique()
+
+
+
+    # ========================================================
+    # PREVISÃO INDIVIDUAL POR LOJA
+    # ========================================================
+
     for loja in lojas:
-        # Dados históricos da loja (já com features)
-        df_loja = df_historico[df_historico['CLV_BANCO'] == loja].sort_values('PERIODO_MES').copy()
-        
-        # Para cada período futuro
+
+
+        # Filtra histórico da loja e organiza por data
+        df_loja = (
+            df_historico[
+                df_historico["loja"] == loja
+            ]
+            .sort_values("mes_referencia")
+            .copy()
+        )
+
+
+
+        # Geração mês a mês
         for data in periodos:
-            # Última linha disponível (real ou prevista)
-            ultima_linha = df_loja.iloc[-1:].copy()
-            
-            # Atualizar período e features temporais
-            ultima_linha['PERIODO_MES'] = data
-            ultima_linha['ANO'] = data.year
-            ultima_linha['MES_NUM'] = data.month
-            ultima_linha['TRIMESTRE'] = data.quarter
-            ultima_linha['INDICE_TEMPO'] = ultima_linha['INDICE_TEMPO'].iloc[0] + 1
-            
-            # Atualizar lags: LAG_1 = último valor real/previsto
-            # LAG_2 = LAG_1 anterior, etc.
-            # Para simplificar, vamos usar os valores reais/previstos da própria loja
-            # (A implementação completa exige shift manual)
-            
-            # Solução mais simples: usar valores conhecidos do histórico + previsões anteriores
-            # Vamos simular usando o último valor previsto ou real
-            ultimo_valor = df_loja['FAT_LIQUIDO_MES'].iloc[-1]
-            ultima_linha['LAG_1'] = ultimo_valor
-            ultima_linha['LAG_2'] = df_loja['LAG_1'].iloc[-1] if len(df_loja) >= 2 else ultimo_valor
-            ultima_linha['LAG_3'] = df_loja['LAG_2'].iloc[-1] if len(df_loja) >= 3 else ultimo_valor
-            
-            # Média móvel 3
-            ultima_linha['MEDIA_MOVEL_3'] = (ultima_linha['LAG_1'] + ultima_linha['LAG_2'] + ultima_linha['LAG_3']).iloc[0] / 3
-            
-            # Crescimento
-            ultima_linha['CRESCIMENTO'] = ((ultima_linha['LAG_1'] / df_loja['LAG_1'].iloc[-1] - 1) * 100).iloc[0] if len(df_loja) > 1 else 0
-            
-            # Sazonalidade cíclica
-            ultima_linha['MES_SENO'] = np.sin(2 * np.pi * data.month / 12)
-            ultima_linha['MES_COSSENO'] = np.cos(2 * np.pi * data.month / 12)
-            
-            # Selecionar features
-            features = ['CLV_BANCO', 'ANO', 'MES_NUM', 'TRIMESTRE', 'INDICE_TEMPO',
-                        'LAG_1', 'LAG_2', 'LAG_3', 'MEDIA_MOVEL_3', 'CRESCIMENTO',
-                        'MES_SENO', 'MES_COSSENO']
-            X_pred = ultima_linha[features]
-            
-            # Previsão
-            pred = modelo.predict(X_pred)[0]
-            
-            # Aplicar limite de crescimento
-            if len(df_loja) > 0:
-                ultimo_real = df_loja['FAT_LIQUIDO_MES'].iloc[-1]
-                if pred > ultimo_real * limite_crescimento:
-                    pred = ultimo_real * limite_crescimento
-            
-            # Armazenar
+
+
+            # Utiliza a última informação disponível
+            # como base para criar as novas features
+            ultima_linha = (
+                df_loja
+                .iloc[-1:]
+                .copy()
+            )
+
+
+            # Atualiza variáveis temporais
+            ultima_linha["mes_referencia"] = data
+            ultima_linha["ano"] = data.year
+            ultima_linha["mes"] = data.month
+            ultima_linha["trimestre"] = data.quarter
+
+
+            # Incrementa o contador temporal
+            ultima_linha["indice_tempo"] += 1
+
+
+
+            # =================================================
+            # CRIAÇÃO DAS FEATURES HISTÓRICAS
+            # =================================================
+
+
+            # Último faturamento conhecido
+            ultimo_valor = (
+                df_loja[
+                    "faturamento_liquido_mensal"
+                ]
+                .iloc[-1]
+            )
+
+
+            # Valores dos meses anteriores
+            ultima_linha["lag_1_mes"] = ultimo_valor
+
+
+            ultima_linha["lag_2_meses"] = (
+                df_loja["lag_1_mes"].iloc[-1]
+                if len(df_loja) >= 2
+                else ultimo_valor
+            )
+
+
+            ultima_linha["lag_3_meses"] = (
+                df_loja["lag_2_meses"].iloc[-1]
+                if len(df_loja) >= 3
+                else ultimo_valor
+            )
+
+
+
+            # Média dos três últimos meses
+            ultima_linha["media_movel_3m"] = (
+
+                (
+                    ultima_linha["lag_1_mes"]
+                    +
+                    ultima_linha["lag_2_meses"]
+                    +
+                    ultima_linha["lag_3_meses"]
+                )
+                .iloc[0]
+                /
+                3
+            )
+
+
+
+            # Calcula crescimento percentual recente
+            if len(df_loja) > 1:
+
+                ultima_linha["taxa_crescimento"] = (
+
+                    (
+                        ultima_linha["lag_1_mes"]
+                        /
+                        df_loja["lag_1_mes"].iloc[-1]
+                        - 1
+                    )
+                    * 100
+
+                ).iloc[0]
+
+            else:
+
+                ultima_linha["taxa_crescimento"] = 0
+
+
+
+            # Variáveis para capturar sazonalidade
+            ultima_linha["mes_seno"] = np.sin(
+                2 * np.pi * data.month / 12
+            )
+
+
+            ultima_linha["mes_cosseno"] = np.cos(
+                2 * np.pi * data.month / 12
+            )
+
+
+
+            # =================================================
+            # PREDIÇÃO DO MODELO
+            # =================================================
+
+            # Seleciona apenas as features esperadas
+            X_pred = ultima_linha[FEATURES]
+
+
+            # Gera a previsão do Random Forest
+            pred = modelo.predict(
+                X_pred
+            )[0]
+
+
+
+            # =================================================
+            # CONTROLE DE CRESCIMENTO
+            # =================================================
+
+            # Último valor real observado
+            ultimo_real = (
+                df_loja[
+                    "faturamento_liquido_mensal"
+                ]
+                .iloc[-1]
+            )
+
+
+            # Limita crescimento máximo para evitar
+            # previsões fora do cenário esperado.
+            if pred > ultimo_real * limite_taxa_crescimento:
+
+                pred = (
+                    ultimo_real
+                    *
+                    limite_taxa_crescimento
+                )
+
+
+
+            # Armazena resultado da previsão
             previsoes.append({
-                'CLV_BANCO': loja,
-                'PERIODO_MES': data,
-                'PREVISAO': pred
+
+                "loja": loja,
+
+                "mes_referencia": data,
+
+                "PREVISAO": pred
+
             })
-            
-            # Adicionar linha prevista ao DataFrame para os próximos lags
+
+
+
+            # =================================================
+            # PREPARAÇÃO PARA O PRÓXIMO MÊS
+            # =================================================
+
+            # Adiciona a previsão gerada ao histórico da loja.
+            #
+            # Isso permite que previsões futuras utilizem
+            # valores previstos como histórico (previsão iterativa).
             nova_linha = ultima_linha.copy()
-            nova_linha['FAT_LIQUIDO_MES'] = pred
-            df_loja = pd.concat([df_loja, nova_linha], ignore_index=True)
-    
-    return pd.DataFrame(previsoes)
+
+
+            nova_linha[
+                "faturamento_liquido_mensal"
+            ] = pred
+
+
+            df_loja = pd.concat(
+                [
+                    df_loja,
+                    nova_linha
+                ],
+                ignore_index=True
+            )
+
+
+
+    # Retorna DataFrame final com todas as previsões
+    return pd.DataFrame(
+        previsoes
+    )

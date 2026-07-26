@@ -1,50 +1,95 @@
-# Ambientes virtuais
+# ============================================================
+# AMBIENTES VIRTUAIS
+# ============================================================
+
 venv/
 venv_casting/
 env/
 .env/
 .venv/
 
-# Arquivos de dados (não versionar dados brutos, mas processados podem ser versionados em repositório privado)
+
+# ============================================================
+# DADOS
+# ============================================================
+
+# Dados brutos originais não devem ser versionados
 data/raw/
-# data/processed/   # permitido
-# *.csv             # permitido (repositório privado)
+
+# Arquivos temporários de planilhas
 *.xlsx
 *.xls
 
-# Modelos treinados (permitido versionar em repositório privado)
+
+# ============================================================
+# MODELOS TREINADOS
+# ============================================================
+
+# Mantido versionado para permitir execução do Streamlit
 # models/*.pkl
 # models/*.joblib
 
-# Arquivos de cache Python
+
+
+# ============================================================
+# CACHE PYTHON
+# ============================================================
+
 __pycache__/
 *.pyc
 *.pyo
 
-# Logs e outputs temporários
-# outputs/           # permitido (imagens do dashboard)
+
+
+# ============================================================
+# LOGS E ARQUIVOS TEMPORÁRIOS
+# ============================================================
+
 logs/
 *.log
 
-# Arquivos de configuração local
+
+
+# ============================================================
+# CONFIGURAÇÕES LOCAIS
+# ============================================================
+
 config_local.py
 .env
 
-# Notebooks (permitido versionar)
-# *.ipynb
 
-# Arquivos de apresentação (muito grandes)
+
+# ============================================================
+# APRESENTAÇÕES E RELATÓRIOS GRANDES
+# ============================================================
+
 presentation/*.pptx
 presentation/*.pdf
 reports/*.pdf
 
-# IDEs
+
+
+# ============================================================
+# IDE
+# ============================================================
+
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS
+
+
+# ============================================================
+# SISTEMA OPERACIONAL
+# ============================================================
+
 .DS_Store
-Thumbs.dbdata/processed/df_tratado.csv
+Thumbs.db
+
+
+
+# ============================================================
+# ARQUIVOS ESPECÍFICOS NÃO NECESSÁRIOS
+# ============================================================
 data/processed/df_tratado.csv

@@ -9,7 +9,7 @@ Dashboard interativo e modelo preditivo para previsão de faturamento líquido m
 
 ## 📊 Funcionalidades
 
-- Previsão dos próximos 3 meses (out, nov, dez/2023) com limite de crescimento mensal de 20%.
+- Previsão dos próximos 3 meses (out, nov, dez/2023) com limite de taxa_crescimento mensal de 20%.
 - Dashboard Streamlit com:
   - Gráfico consolidado de previsão futura.
   - Tabela de previsões por loja (filtrável).

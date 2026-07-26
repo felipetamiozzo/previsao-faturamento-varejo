@@ -1,132 +1,361 @@
-# Projeto de Previsão de Faturamento – Solução Casting
+# 📈 Projeto de Previsão de Faturamento com Machine Learning
 
-## Relatório Final – Junho de 2026
+## Relatório Final – 2026
 
----
+# 1. Visão Geral do Projeto
 
-## 1. Resumo Executivo
+## Objetivo
 
-**Objetivo**  
-Desenvolver um modelo preditivo para estimar o faturamento líquido mensal da Solução Casting, utilizando dados históricos de vendas, com horizonte de três meses à frente, para apoiar decisões comerciais e financeiras.
+Desenvolver uma solução de Machine Learning capaz de prever o faturamento líquido mensal de lojas utilizando dados históricos de vendas.
 
-**Escopo**  
-Foram analisados dados transacionais de 8 lojas (`CASTING_DB063`, `DB069`, `DB088`, `DB092`, `DB101`, `DB102`, `DB109`, `DB113`) no período de janeiro de 2022 a setembro de 2023 (21 meses completos). A variável‑alvo é o `FAT_LIQUIDO_MES`, obtido pela agregação mensal do valor líquido final das vendas (`VUF_VLRLIQFINAL`).
+O objetivo principal foi criar um modelo preditivo que auxilie processos de:
 
-**Principais Resultados**  
-- O modelo **Random Forest base** apresentou o melhor desempenho, com **MAPE de 11,16%** e **WMAPE de 8,57%**, superando o baseline e demais modelos testados.
-- As previsões para outubro, novembro e dezembro/2023 indicam crescimento sazonal consistente com o histórico, com destaque para dezembro (R$ 104,6 milhões, +14,3% sobre novembro).
+- planejamento financeiro;
+- definição de metas comerciais;
+- projeção de receita;
+- acompanhamento operacional;
+- tomada de decisão baseada em dados.
 
----
+A solução foi construída utilizando uma abordagem completa de Data Science, passando pelas etapas de:
 
-## 2. Metodologia
-
-### 2.1. Exploração e Tratamento dos Dados
-
-A base bruta continha **8.297.456 registros**, 14 colunas, de janeiro/2022 a outubro/2023. As principais ações de tratamento foram:
-
-| Ação                                                                 | Justificativa                                                                 |
-|----------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| Remoção de outubro/2023                                              | Mês incompleto (apenas 7.919 registros) distorce séries temporais.            |
-| Remoção de 4 registros com desconto > bruto em vendas positivas      | Possíveis erros de PDV, volume insignificante.                                |
-| Preenchimento de `PRO_CODIGO` nulo (3 registros) com `'PRODUTO_NAO_MAPEADO'` | Preserva a transação para faturamento.                                        |
-| Remoção da coluna `VUF_VLRTROCA`                                     | Coluna totalmente zerada, sem contribuição.                                   |
-| Criação de flag de inconsistência financeira                         | Sinaliza divergências entre `bruto - desconto` e `líquido` (11,86% dos registros). |
-| Criação de flag de devolução (`FLAG_DEVOLUCAO`)                      | Baseada em `VUF_VLRLIQFINAL < 0` (4,52% dos registros).                       |
-| Criação de flag de venda de alto valor (`FLAG_ALTO_VALOR`)           | Baseada no percentil 99 por loja (0,82% dos registros).                       |
-
-A agregação mensal resultou em **168 observações** (8 lojas × 21 meses), prontas para modelagem.
-
-### 2.2. Feature Engineering (Base Mensal)
-
-Foram criadas as seguintes variáveis explicativas:
-
-- **Temporais** – ano, mês, trimestre, índice de tempo sequencial por loja.
-- **Lags** – valores do faturamento defasados em 1, 2 e 3 meses.
-- **Média móvel** – média dos três meses anteriores.
-- **Crescimento percentual** – variação percentual mês a mês.
-- **Sazonalidade cíclica** – seno e cosseno do número do mês (12 meses).
-
-A variável categórica `CLV_BANCO` foi codificada via **One‑Hot Encoding** no pipeline de modelagem.
-
-### 2.3. Modelos Avaliados
-
-| Modelo                      | Características                                                                 |
-|-----------------------------|---------------------------------------------------------------------------------|
-| **Baseline**                | Média simples dos últimos 3 meses (sem treinamento).                            |
-| **Regressão Linear**        | Modelo linear com as mesmas features, incluindo `CLV_BANCO`.                    |
-| **Random Forest (base)**    | 300 árvores, profundidade máxima 5.                                             |
-| **Random Forest (tunado)**  | Otimização via GridSearch com TimeSeriesSplit (3 folds).                        |
-| **XGBoost**                 | 300 árvores, `max_depth=3`, `learning_rate=0.05`, `subsample=0.9`.              |
-
-### 2.4. Validação Temporal
-
-- **Treino**: abril de 2022 a junho de 2023 (15 meses)
-- **Teste**: julho a setembro de 2023 (3 meses)
-
-**Métricas** – MAE, RMSE, MAPE, WMAPE.
+**Coleta → Tratamento → Análise → Feature Engineering → Modelagem → Avaliação → Previsão → Dashboard**
 
 ---
 
-## 3. Resultados
+# 2. Resultados Principais
 
-### 3.1. Comparação de Modelos
+O modelo final selecionado foi o:
 
-| Modelo                | MAE (R$)   | RMSE (R$)   | MAPE (%) | WMAPE (%) |
-|-----------------------|------------|-------------|----------|-----------|
-| **Random Forest Base**| 1.038.660  | 1.540.806   | **11,16** | 8,57       |
-| Random Forest Tunado  | 1.200.307  | 1.715.937   | 11,73    | 9,90       |
-| XGBoost               | 1.552.802  | 2.425.989   | 13,72    | 12,81      |
-| Baseline MM3          | 1.800.702  | 2.723.303   | 14,75    | 14,85      |
-| Regressão Linear      | 11.704.482 | 18.017.336  | 253,01   | 96,52      |
+##  Random Forest Regressor
 
-> **Melhor modelo**: Random Forest Base, com **MAPE de 11,16%**.
+Com desempenho:
 
-### 3.2. Análise dos Resultados
+| Métrica | Resultado |
+|---|---:|
+| MAPE | **11,20%** |
+| WMAPE | **8,63%** |
+| MAE | R$ 1.046.032 |
+| RMSE | R$ 1.544.294 |
 
-- O Random Forest base superou até mesmo a versão tunada, indicando que o conjunto de hiperparâmetros inicial já era adequado e que o GridSearch pode ter causado leve overfitting à validação temporal.
-- A Regressão Linear apresentou desempenho muito inferior, confirmando a relação não linear entre as variáveis.
-- O baseline (média móvel de 3 meses) serviu como referência mínima, sendo superado por todos os modelos baseados em árvores.
+O modelo apresentou uma redução significativa de erro quando comparado ao baseline:
 
----
+| Modelo | MAPE |
+|---|---:|
+| Baseline Média Móvel 3 meses | 14,75% |
+| Random Forest Base | **11,20%** |
 
-## 4. Previsão Futura
+### Ganho obtido:
 
-Com o modelo **Random Forest Base** treinado com todo o histórico (janeiro/2022 a setembro/2023), foram geradas previsões para os três meses seguintes, aplicando um **limite de crescimento mensal de 20%** para evitar extrapolações excessivas.
-
-| Período       | Faturamento Previsto (R$) | Crescimento mensal |
-|---------------|---------------------------|--------------------|
-| Outubro/2023  | 89,9 M                    | –                  |
-| Novembro/2023 | 91,6 M                    | +1,9%              |
-| Dezembro/2023 | 104,6 M                   | +14,3%             |
-
-O crescimento de dezembro (+14,3%) reflete a **sazonalidade típica de final de ano**, observada nos dados históricos (pico em dez/2022). O limite de 20% foi definido para evitar valores irrealistas, mantendo a coerência com a trajetória anterior.
-
-### Diagnóstico do pico de dezembro
-
-A previsão de dezembro/2023 por loja mostra que as maiores contribuições vêm de `CASTING_DB113` (R$ 34,6 M) e `CASTING_DB109` (R$ 21,7 M). Quando comparado ao dezembro de 2022, nota-se uma queda expressiva nessas lojas (cerca de -51% e -40%, respectivamente), o que é consistente com a tendência de estabilização observada ao longo de 2023. As demais lojas apresentam variações pequenas ou positivas.
+- Redução de aproximadamente **24% no erro percentual (MAPE)** em relação ao baseline.
+- Melhor equilíbrio entre desempenho, interpretabilidade e capacidade de generalização.
 
 ---
 
-## 5. Conclusões e Recomendações
+# 3. Dados Utilizados
 
-- O **Random Forest Base** é o modelo recomendado para produção, com MAPE de 11,16%, equilibrando simplicidade e acurácia.
-- A sazonalidade de dezembro é capturada corretamente – a manutenção de variáveis temporais (mês, seno/cosseno) e lags é essencial.
-- As previsões para outubro, novembro e dezembro/2023 são **realistas** e podem ser usadas para planejamento de caixa, estoque e definição de metas comerciais.
+A base inicial possuía:
 
-**Recomendações:**
-1. **Monitoramento contínuo** – comparar as previsões com os resultados reais mensalmente.
-2. **Recalibração semestral** – reestimar o modelo com os novos dados a cada seis meses.
-3. **Expansão** – testar previsões por vendedor ou cliente, caso a granularidade dos dados permita.
+- **8.297.456 registros transacionais**
+- 14 variáveis originais
+- período analisado: janeiro/2022 até setembro/2023
+- 8 unidades analisadas
+- 21 meses completos de histórico
+
+A variável alvo utilizada foi:
+
+```
+faturamento_liquido_mensal
+```
+
+Obtida através da agregação mensal do faturamento líquido das vendas.
 
 ---
 
-## 6. Próximos Passos
+# 4. Tratamento dos Dados
 
-- Automatizar o pipeline de previsão (coleta → tratamento → modelo → entrega do relatório).
-- Incluir variáveis exógenas (dias úteis, feriados, campanhas promocionais) para refinar a acurácia.
-- Desenvolver um dashboard em Power BI ou Streamlit para visualização dinâmica das previsões.
+O pipeline de tratamento aplicou diversas validações para garantir qualidade dos dados:
+
+## Principais etapas:
+
+| Tratamento | Resultado |
+|-|-|
+| Remoção do mês incompleto | Outubro/2023 removido para evitar distorção temporal |
+| Tratamento de datas inválidas | Registros inconsistentes removidos |
+| Validação financeira | Identificação de divergências entre bruto, desconto e líquido |
+| Tratamento de produtos sem identificação | Valores nulos substituídos |
+| Remoção de variáveis sem informação | Colunas sem contribuição removidas |
+| Criação de indicadores de qualidade | Flags de inconsistência, devolução e alto valor |
+
+Também foram criadas variáveis auxiliares para análise:
+
+- flag de devoluções;
+- flag de inconsistências financeiras;
+- identificação de vendas acima do percentil 99.
 
 ---
 
-**Responsável pela modelagem:** Grupo 1 projeto Previsão de Faturamento – Solução Casting  
-**Data do relatório:** junho de 2026
+# 5. Feature Engineering
+
+Para capturar comportamento histórico e sazonalidade foram desenvolvidas variáveis preditivas:
+
+## Variáveis temporais
+
+- ano;
+- mês;
+- trimestre;
+- índice temporal por loja.
+
+## Variáveis históricas
+
+Foram utilizadas defasagens de faturamento:
+
+- LAG 1 mês;
+- LAG 2 meses;
+- LAG 3 meses.
+
+## Tendência
+
+- média móvel dos últimos 3 meses;
+- taxa de crescimento mensal.
+
+## Sazonalidade
+
+Aplicação de transformação cíclica:
+
+- seno do mês;
+- cosseno do mês.
+
+Essa abordagem permitiu representar corretamente padrões sazonais, como períodos de maior faturamento.
+
+---
+
+# 6. Modelos Avaliados
+
+Foram comparadas diferentes abordagens:
+
+| Modelo | Descrição |
+|-|-|
+| Baseline MM3 | Média móvel dos últimos 3 meses |
+| Regressão Linear | Modelo linear tradicional |
+| Random Forest Base | Modelo final selecionado |
+| Random Forest Tunado | Otimização via busca de hiperparâmetros |
+| XGBoost | Modelo baseado em Gradient Boosting |
+
+---
+
+# 7. Comparação dos Modelos
+
+| Modelo | MAE | RMSE | MAPE | WMAPE |
+|-|-:|-:|-:|-:|
+| Random Forest Base | R$ 1.046.032 | R$ 1.544.294 | **11,20%** | **8,63%** |
+| Random Forest Tunado | R$ 1.200.307 | R$ 1.715.937 | 11,87% | 9,90% |
+| XGBoost | R$ 1.552.802 | R$ 2.425.989 | 12,28% | 12,81% |
+| Baseline MM3 | R$ 1.800.702 | R$ 2.723.303 | 14,75% | 14,85% |
+| Regressão Linear | - | - | 253% | 96% |
+
+---
+
+# 8. Previsão Futura
+
+Após o treinamento utilizando todo o histórico disponível, foram realizadas previsões para os próximos três meses.
+
+Foi aplicado um controle de crescimento máximo mensal de 20%, evitando previsões fora do comportamento histórico.
+
+## Resultado consolidado:
+
+| Período | Previsão |
+|-|-:|
+| Outubro/2023 | R$ 89,9 milhões |
+| Novembro/2023 | R$ 91,6 milhões |
+| Dezembro/2023 | R$ 104,6 milhões |
+
+O crescimento previsto para dezembro:
+
+```
++14,3%
+```
+
+apresenta comportamento compatível com a sazonalidade observada historicamente no período de final de ano.
+
+---
+
+# 9. Interpretabilidade do Modelo
+
+A análise da importância das variáveis mostrou que os principais fatores utilizados pelo modelo foram:
+
+1. Faturamento do mês anterior;
+2. Média móvel dos últimos 3 meses;
+3. Histórico recente da loja;
+4. Variáveis temporais.
+
+O resultado demonstra que o comportamento recente do faturamento possui maior influência na previsão futura.
+
+---
+
+# 10. Aplicação Streamlit
+
+Foi desenvolvido um dashboard interativo para disponibilização dos resultados.
+
+Funcionalidades:
+
+## Previsão Consolidada
+
+- visão geral dos próximos meses;
+- acompanhamento da evolução prevista.
+
+## Previsão por Loja
+
+- seleção individual da unidade;
+- previsão específica para cada loja;
+- comparação entre desempenhos.
+
+## Histórico
+
+- análise da evolução do faturamento;
+- comportamento mensal.
+
+## Métricas do Modelo
+
+- comparação dos algoritmos;
+- indicadores de desempenho.
+
+## 📌 Importância das Variáveis
+
+- interpretação dos fatores utilizados pelo modelo.
+
+---
+
+# 11. Arquitetura do Projeto
+
+```
+Projeto_Previsao_Faturamento/
+
+│
+├── app/
+│   └── app.py                 # Dashboard Streamlit
+│
+├── data/
+│   ├── raw/                   # Dados originais
+│   └── processed/             # Dados tratados
+│
+├── models/
+│   └── rf_model.pkl           # Modelo final treinado
+│
+├── notebooks/
+│   ├── 01_exploracao.ipynb
+│   ├── 02_tratamento.ipynb
+│   └── 03_modelagem.ipynb
+│
+├── src/
+│   ├── data_cleaning.py
+│   ├── features.py
+│   ├── model.py
+│   ├── predict.py
+│   └── utils.py
+│
+├── main.py                    # Pipeline completo
+│
+└── README.md
+```
+
+---
+
+# 12. Tecnologias Utilizadas
+
+## Linguagem
+
+- Python
+
+## Manipulação de Dados
+
+- Pandas
+- NumPy
+
+## Machine Learning
+
+- Scikit-Learn
+- Random Forest
+- XGBoost
+
+## Visualização
+
+- Plotly
+- Streamlit
+- Matplotlib
+
+## Versionamento
+
+- Git
+- GitHub
+
+---
+
+# 13. Como Executar o Projeto
+
+## Instalar dependências
+
+```bash
+pip install -r requirements.txt
+```
+
+## Executar pipeline completo
+
+```bash
+python main.py
+```
+
+O pipeline irá:
+
+1. carregar dados;
+2. realizar tratamento;
+3. gerar agregação mensal;
+4. criar features;
+5. treinar modelo;
+6. gerar previsões futuras.
+
+---
+
+## Executar Dashboard
+
+```bash
+streamlit run app/app.py
+```
+
+---
+
+# 14. Próximas Evoluções
+
+Possíveis melhorias futuras:
+
+- inclusão de variáveis externas:
+  - inflação;
+  - feriados;
+  - campanhas promocionais;
+  - indicadores econômicos.
+
+- monitoramento contínuo do erro do modelo;
+
+- reentreinamento automático;
+
+- utilização de SHAP para explicabilidade individual;
+
+- modelos avançados de séries temporais;
+
+- integração com bancos de dados e pipelines automatizados.
+
+---
+
+# Conclusão
+
+O projeto demonstrou que técnicas de Machine Learning podem ser utilizadas para prever faturamento com boa precisão, superando abordagens tradicionais baseadas apenas em médias históricas.
+
+O modelo final alcançou:
+
+🎯 **MAPE de 11,20%**
+
+com capacidade de gerar previsões mensais por loja e apoiar processos de planejamento e tomada de decisão orientada por dados.
+
+---
+
+**Projeto desenvolvido por Grupo 1 - Felipe Tamiozzo, Felipe Barbosa, Kilian Israel**  
+**Data Science | Machine Learning | Analytics**
