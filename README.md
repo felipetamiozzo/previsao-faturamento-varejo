@@ -1,121 +1,217 @@
-Atualizei o `README.md` com as imagens fornecidas, renomeando-as de forma descritiva e organizando a exibição. As imagens foram colocadas na pasta `outputs/` e referenciadas no documento. Abaixo está o conteúdo final do `README.md` ajustado. Substitua o arquivo existente por este.
 
-```markdown
-# Solução Casting - Previsão de Faturamento
+# Projeto com Dados Reais - Previsão de Faturamento
 
-**Grupo 1** | Projeto DNC
+**Projeto de Ciência de Dados | Previsão de Faturamento com Machine Learning**
 
-Dashboard interativo e modelo preditivo para previsão de faturamento líquido mensal por loja, utilizando dados históricos de transações (jan/2022 a set/2023). O modelo Random Forest atingiu **MAPE de 11,16%** no período de teste (jul-set/2023).
+## Contexto do Projeto
 
-## 📊 Funcionalidades
+Este projeto foi desenvolvido a partir de um cenário real de uma empresa prestadora de serviços de tecnologia e análise de dados para diferentes clientes do varejo.
 
-- Previsão dos próximos 3 meses (out, nov, dez/2023) com limite de taxa_crescimento mensal de 20%.
-- Dashboard Streamlit com:
+O processo de previsão de faturamento era realizado de forma manual, utilizando análises simplificadas dos dados históricos, o que demandava tempo operacional e limitava a capacidade de gerar previsões mais precisas e escaláveis.
+
+Como solução, foi desenvolvido um pipeline completo de Ciência de Dados capaz de automatizar a previsão de faturamento líquido mensal por loja, utilizando técnicas de Machine Learning para apoiar decisões estratégicas, reduzir esforços manuais e gerar maior valor através dos dados.
+
+A solução contempla desde a preparação dos dados transacionais até a disponibilização dos resultados em um dashboard interativo, permitindo uma análise mais rápida do comportamento histórico e das projeções futuras.
+
+O modelo final, baseado em **Random Forest Regressor**, alcançou **MAPE de 11,20%** no período de validação temporal.
+
+---
+
+# 📊 Funcionalidades
+
+- Previsão dos próximos 3 meses (outubro, novembro e dezembro de 2023).
+- Controle de crescimento máximo mensal de 20% para evitar projeções fora do comportamento histórico.
+- Dashboard interativo desenvolvido em Streamlit com:
+
   - Gráfico consolidado de previsão futura.
-  - Tabela de previsões por loja (filtrável).
-  - Histórico de faturamento por loja.
-  - Métricas do modelo e comparação com outros algoritmos.
-- Modelo treinado com validação temporal (TimeSeriesSplit).
+  - Previsões detalhadas por loja.
+  - Filtro individual por unidade.
+  - Histórico de faturamento mensal.
+  - Métricas de avaliação dos modelos.
+  - Comparação entre algoritmos.
+  - Visualização da importância das variáveis.
 
-## 📈 Resultados e Gráficos
+- Pipeline completo de Machine Learning:
 
-### 1. Comparação de Modelos (MAPE)
+  - Exploração dos dados.
+  - Tratamento e validação.
+  - Engenharia de atributos.
+  - Treinamento do modelo.
+  - Avaliação.
+  - Geração de previsões futuras.
 
-O gráfico abaixo mostra o desempenho dos modelos testados. O **Random Forest Base** foi o melhor, com MAPE de 11,16%, superando o Baseline e outros algoritmos.
+---
+
+# 📈 Resultados e Gráficos
+
+## 1. Comparação de Modelos (MAPE)
+
+O gráfico apresenta o desempenho dos modelos avaliados durante a etapa de validação.
+
+O **Random Forest Base** apresentou o melhor resultado, alcançando **MAPE de 11,20%**, superando modelos alternativos e o baseline estatístico.
 
 ![Comparação de Modelos](outputs/comparacao_modelos.png)
 
-### 2. Real vs Previsto – Período de Teste (jul–set/2023)
 
-Acurácia do modelo no período de teste, mostrando boa aderência entre valores reais e previstos.
+## 2. Real vs Previsto – Período de Teste (jul–set/2023)
+
+Comparação entre os valores reais e previstos pelo modelo durante o período de teste.
+
+O resultado demonstra boa capacidade do modelo em acompanhar o comportamento histórico do faturamento.
 
 ![Real vs Previsto](outputs/real_vs_previsto_melhor_modelo.png)
 
-### 3. Previsão Futura – Próximos 3 Meses
 
-Projeção de faturamento consolidado para outubro, novembro e dezembro de 2023, com destaque para o pico sazonal em dezembro.
+## 3. Previsão Futura – Próximos 3 Meses
+
+Projeção consolidada do faturamento para outubro, novembro e dezembro de 2023.
+
+O modelo identifica o comportamento esperado da série temporal, incluindo efeitos sazonais observados historicamente.
 
 ![Previsão Futura](outputs/previsao_futura.png)
 
-## 🚀 Como executar
+---
 
-### Pré‑requisitos
+# 🚀 Como executar
 
-- Python 3.9+
+## Pré-requisitos
+
+- Python 3.11+
 - Git
 
-### Passos
+
+## Passos
 
 1. Clone o repositório:
-   ```bash
-   git clone https://github.com/seu-usuario/casting-previsao.git
-   cd casting-previsao
-   ```
 
-2. Crie e ative um ambiente virtual (opcional, mas recomendado):
-   ```bash
-   python -m venv venv
-   source venv/bin/activate      # Linux/Mac
-   .\venv\Scripts\activate       # Windows
-   ```
+```bash
+git clone https://github.com/seu-usuario/previsao-faturamento-varejo.git
+
+cd previsao-faturamento-varejo
+```
+
+
+2. Crie e ative um ambiente virtual:
+
+```bash
+python -m venv .venv
+
+# Windows
+.\.venv\Scripts\activate
+```
+
 
 3. Instale as dependências:
-   ```bash
-   pip install -r requirements.txt
-   ```
 
-4. Certifique-se de que os seguintes arquivos estejam nos locais corretos:
-   - `models/rf_base_model.pkl` – modelo treinado.
-   - `data/processed/df_mensal.csv` – base histórica agregada.
-   - `data/processed/previsoes_futuras.csv` – previsões geradas (opcional, pois o app pode recalculá‑las).
+```bash
+pip install -r requirements.txt
+```
 
-5. Execute o dashboard:
-   ```bash
-   streamlit run app/app.py
-   ```
 
-## 📁 Estrutura do Projeto
+4. Certifique-se de que os arquivos necessários estejam disponíveis:
 
 ```
-casting-previsao/
-├── app/                      # Aplicação Streamlit
-│   └── app.py
-├── data/                     # Dados (ignorados no repositório, exceto estrutura)
-│   ├── raw/                  # Dados brutos (não versionados)
-│   └── processed/            # Dados processados (não versionados)
-├── models/                   # Modelo treinado (rf_base_model.pkl)
-├── notebooks/                # Notebooks de exploração e modelagem
-├── outputs/                  # Gráficos e resultados (imagens do README)
-├── src/                      # Módulos auxiliares (data_cleaning, features, etc.)
+models/rf_model.pkl
+data/processed/df_mensal.csv
+data/processed/previsoes_futuras.csv
+```
+
+
+5. Execute o dashboard:
+
+```bash
+streamlit run app/app.py
+```
+
+---
+
+# 📁 Estrutura do Projeto
+
+```
+previsao-faturamento-varejo/
+
+├── app/
+│   └── app.py                 # Dashboard Streamlit
+
+├── data/
+│   ├── raw/                   # Dados brutos (não versionados)
+│   └── processed/             # Dados tratados e agregados
+
+├── models/
+│   └── rf_model.pkl           # Modelo treinado
+
+├── notebooks/
+│   ├── 01_exploracao_dados.ipynb
+│   ├── 02_tratamento_dados.ipynb
+│   └── 03_modelagem.ipynb
+
+├── outputs/
+│   ├── gráficos
+│   └── métricas do projeto
+
+├── src/
+│   ├── data_cleaning.py       # Tratamento dos dados
+│   ├── features.py            # Engenharia de atributos
+│   ├── model.py               # Treinamento do modelo
+│   ├── predict.py             # Geração das previsões
+│   └── utils.py               # Funções auxiliares
+
 ├── .gitignore
 ├── README.md
 └── requirements.txt
 ```
 
-## 📋 Tabela de Métricas
+---
 
-| Modelo                | MAPE (%) |
+# 📋 Tabela de Métricas
+
+| Modelo | MAPE (%) |
 |-----------------------|----------|
-| Random Forest Base    | 11,16    |
-| Random Forest Tunado  | 11,73    |
-| XGBoost               | 13,72    |
-| Baseline MM3          | 14,75    |
-| Regressão Linear      | 253,01   |
+| Random Forest Base | 11,20 |
+| Random Forest Tunado | 11,87 |
+| XGBoost | 12,28 |
+| Baseline MM3 | 14,75 |
 
-## 🖥️ Dashboard
+---
 
-O dashboard permite filtrar por loja e visualizar:
+# 🖥️ Dashboard
 
-- Previsões futuras (gráfico + tabela)
-- Histórico real da loja
-- Métricas globais do modelo
+O dashboard permite explorar os resultados do modelo através de:
 
-## 👥 Desenvolvido por
+- Previsões futuras consolidadas.
+- Previsões individuais por loja.
+- Histórico mensal de faturamento.
+- Comparação de modelos.
+- Métricas de desempenho.
+- Análise da importância das variáveis utilizadas pelo modelo.
 
-Grupo 1 – Solução Casting | Projeto DNC
 
-## 📄 Licença
+---
 
-Este projeto é de uso interno da empresa. Não redistribuir sem autorização.
-```
+# 🧠 Principais Insights do Modelo
 
+As variáveis que mais contribuíram para a previsão foram:
+
+- Faturamento do mês anterior (`lag_1_mes`).
+- Faturamento dos meses anteriores (`lag_2_meses` e `lag_3_meses`).
+- Taxa de crescimento histórica.
+- Média móvel dos últimos meses.
+- Identificador da loja.
+
+Esses resultados mostram que o comportamento recente do faturamento possui forte influência na previsão futura.
+
+
+---
+
+# 👤 Desenvolvido por
+
+Felipe Tamiozzo - Felipe Barbosa - Kilian Israel
+
+Projeto de Ciência de Dados aplicado à previsão de faturamento utilizando Machine Learning.
+
+
+---
+
+# 📄 Licença
+
+Projeto desenvolvido para fins de estudo, portfólio e demonstração técnica.
