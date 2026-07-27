@@ -85,7 +85,7 @@ MODEL_PATH = os.path.join(
 HISTORICAL_PATH = os.path.join(
     BASE_DIR,
     "data",
-    "processed",
+    "sample",
     "df_mensal.csv"
 )
 
@@ -94,7 +94,7 @@ HISTORICAL_PATH = os.path.join(
 PREDICTIONS_PATH = os.path.join(
     BASE_DIR,
     "data",
-    "processed",
+    "sample",
     "previsoes_futuras.csv"
 )
 

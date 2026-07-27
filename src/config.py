@@ -12,10 +12,10 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 # Organização das pastas de dados
 DATA_DIR = ROOT_DIR / "data"
 
-# Dados originais (sem tratamento)
+# Dados originais (não versionados)
 RAW_DIR = DATA_DIR / "raw"
 
-# Dados tratados e preparados para modelagem
+# Dados de demonstração utilizados no repositório público
 PROCESSED_DIR = DATA_DIR / "processed"
 
 

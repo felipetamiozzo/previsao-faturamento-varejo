@@ -13,8 +13,13 @@ env/
 # DADOS
 # ============================================================
 
-# Dados brutos originais não devem ser versionados
+# Dados reais
 data/raw/
+data/processed/
+
+# Dados demonstrativos públicos
+!data/sample/
+!data/sample/**
 
 # Arquivos temporários de planilhas
 *.xlsx
@@ -25,10 +30,10 @@ data/raw/
 # MODELOS TREINADOS
 # ============================================================
 
-# Mantido versionado para permitir execução do Streamlit
-# models/*.pkl
-# models/*.joblib
+# Modelos finais utilizados pela aplicação
+# Mantidos versionados para permitir execução do Streamlit
 
+models/experiments/
 
 
 # ============================================================
@@ -92,4 +97,11 @@ Thumbs.db
 # ============================================================
 # ARQUIVOS ESPECÍFICOS NÃO NECESSÁRIOS
 # ============================================================
-data/processed/df_tratado.csv
+
+# Dados processados reais
+data/processed/*.csv
+data/processed/*.parquet
+
+# Permite arquivos de demonstração
+!data/processed/sample/
+!data/processed/sample/**

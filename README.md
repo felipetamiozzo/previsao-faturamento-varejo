@@ -1,7 +1,5 @@
 
-# Projeto com Dados Reais - Previsão de Faturamento
-
-**Projeto de Ciência de Dados | Previsão de Faturamento com Machine Learning**
+# 📈 Projeto de Previsão de Faturamento com Machine Learning
 
 ## Contexto do Projeto
 
