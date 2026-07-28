@@ -1,42 +1,193 @@
 
+````markdown
 # 📈 Projeto de Previsão de Faturamento com Machine Learning
 
 ## Contexto do Projeto
 
-Este projeto foi desenvolvido a partir de um cenário real de uma empresa prestadora de serviços de tecnologia e análise de dados para diferentes clientes do varejo.
+Este projeto foi desenvolvido a partir de um cenário real de negócio envolvendo **previsão de faturamento no varejo**, utilizando dados históricos de vendas e técnicas de Machine Learning.
 
-O processo de previsão de faturamento era realizado de forma manual, utilizando análises simplificadas dos dados históricos, o que demandava tempo operacional e limitava a capacidade de gerar previsões mais precisas e escaláveis.
+O desafio consistia em transformar grandes volumes de dados transacionais em uma solução capaz de prever o faturamento futuro, reduzindo análises manuais e permitindo maior agilidade no planejamento comercial.
 
-Como solução, foi desenvolvido um pipeline completo de Ciência de Dados capaz de automatizar a previsão de faturamento líquido mensal por loja, utilizando técnicas de Machine Learning para apoiar decisões estratégicas, reduzir esforços manuais e gerar maior valor através dos dados.
+A base inicial continha **milhões de registros de vendas antes do processamento**, passando posteriormente por etapas de exploração, validação, tratamento, consolidação e engenharia de atributos até ser transformada em uma série temporal adequada para modelagem preditiva.
 
-A solução contempla desde a preparação dos dados transacionais até a disponibilização dos resultados em um dashboard interativo, permitindo uma análise mais rápida do comportamento histórico e das projeções futuras.
+Como solução, foi desenvolvido um pipeline completo de Ciência de Dados capaz de prever o **faturamento líquido mensal por loja**, utilizando Machine Learning para apoiar decisões relacionadas a:
 
-O modelo final, baseado em **Random Forest Regressor**, alcançou **MAPE de 11,20%** no período de validação temporal.
+- Planejamento comercial;
+- Gestão de estoque;
+- Campanhas promocionais;
+- Definição de metas;
+- Tomada de decisão orientada por dados.
+
+O modelo final, baseado em **Random Forest Regressor**, alcançou:
+
+- **MAPE: 11,20%**
+- **WMAPE: 8,63%**
+
+durante a validação temporal.
+
+---
+
+# 🎯 Objetivo do Projeto
+
+Desenvolver uma solução preditiva capaz de estimar o faturamento futuro utilizando dados históricos de vendas, permitindo antecipar tendências e apoiar decisões estratégicas.
+
+A solução contempla todo o ciclo de um projeto de Machine Learning:
+
+- Exploração dos dados;
+- Tratamento e validação;
+- Engenharia de atributos;
+- Treinamento de modelos;
+- Comparação de algoritmos;
+- Avaliação de métricas;
+- Geração de previsões futuras;
+- Disponibilização através de dashboard interativo.
 
 ---
 
 # 📊 Funcionalidades
 
-- Previsão dos próximos 3 meses (outubro, novembro e dezembro de 2023).
-- Controle de crescimento máximo mensal de 20% para evitar projeções fora do comportamento histórico.
-- Dashboard interativo desenvolvido em Streamlit com:
+## Dashboard Streamlit
 
-  - Gráfico consolidado de previsão futura.
-  - Previsões detalhadas por loja.
-  - Filtro individual por unidade.
-  - Histórico de faturamento mensal.
-  - Métricas de avaliação dos modelos.
-  - Comparação entre algoritmos.
-  - Visualização da importância das variáveis.
+A aplicação permite visualizar:
 
-- Pipeline completo de Machine Learning:
+- Previsão consolidada dos próximos meses;
+- Previsão individual por loja;
+- Histórico de faturamento;
+- Comparação entre valores reais e previstos;
+- Métricas dos modelos avaliados;
+- Importância das variáveis utilizadas.
 
-  - Exploração dos dados.
-  - Tratamento e validação.
-  - Engenharia de atributos.
-  - Treinamento do modelo.
-  - Avaliação.
-  - Geração de previsões futuras.
+## Pipeline de Machine Learning
+
+O projeto possui uma estrutura automatizada para:
+
+- Carregamento dos dados;
+- Tratamento das informações;
+- Criação das variáveis temporais;
+- Treinamento do modelo;
+- Salvamento do modelo treinado;
+- Geração das previsões.
+
+---
+
+#  Arquitetura da Solução
+
+Fluxo desenvolvido:
+
+```
+Dados Transacionais
+        │
+        ▼
+Exploração dos Dados
+        │
+        ▼
+Tratamento e Validação
+        │
+        ▼
+Consolidação Mensal
+        │
+        ▼
+Engenharia de Atributos
+        │
+        ▼
+Treinamento dos Modelos
+        │
+        ▼
+Avaliação e Seleção
+        │
+        ▼
+Previsões Futuras
+        │
+        ▼
+Dashboard Streamlit
+```
+
+---
+
+# 🔎 Análises e Insights Gerados
+
+Durante a etapa exploratória foram identificados diversos comportamentos relevantes.
+
+## Influência do histórico recente
+
+As variáveis relacionadas ao faturamento dos meses anteriores apresentaram maior importância para o modelo.
+
+Isso demonstra que o comportamento recente da receita possui forte capacidade de explicar o faturamento futuro.
+
+## Padrões sazonais
+
+O modelo conseguiu capturar variações temporais presentes no histórico, permitindo identificar períodos com maior ou menor tendência de faturamento.
+
+## Diferenças entre lojas
+
+A identificação da loja apresentou relevância no modelo, indicando que cada unidade possui características próprias de comportamento.
+
+## Tratamento de registros negativos
+
+Durante a análise dos dados foi identificado que registros negativos não deveriam ser avaliados apenas pelo valor bruto.
+
+Existiam situações em que:
+
+- O valor bruto era positivo;
+- O valor bruto era zero;
+- Porém o faturamento líquido final era negativo.
+
+Por isso, a modelagem utilizou como variável objetivo o:
+
+**Faturamento Líquido Final**
+
+garantindo maior consistência na previsão.
+
+---
+
+#  Engenharia de Atributos
+
+Foram criadas variáveis capazes de representar comportamento histórico e tendência:
+
+- Faturamento do mês anterior (`lag_1_mes`);
+- Faturamento de dois meses anteriores (`lag_2_meses`);
+- Faturamento de três meses anteriores (`lag_3_meses`);
+- Média móvel dos últimos meses;
+- Taxa de crescimento;
+- Variáveis temporais;
+- Identificação da loja.
+
+Esses atributos permitiram ao modelo aprender padrões históricos de comportamento.
+
+---
+
+#  Modelos Avaliados
+
+Foram comparados diferentes algoritmos:
+
+| Modelo | MAPE (%) |
+|---|---:|
+| Random Forest Base | **11,20** |
+| Random Forest Tunado | 11,87 |
+| XGBoost | 12,28 |
+| Baseline Média Móvel | 14,75 |
+
+---
+
+#  Modelo Final Escolhido
+
+O modelo selecionado foi:
+
+## Random Forest Regressor
+
+Desempenho obtido:
+
+- **MAPE: 11,20%**
+- **WMAPE: 8,63%**
+
+Motivos da escolha:
+
+- Menor erro entre os modelos avaliados;
+- Boa capacidade de capturar padrões históricos;
+- Maior estabilidade;
+- Boa relação entre desempenho e interpretabilidade.
+
+Comparado ao baseline de média móvel, o modelo conseguiu reduzir significativamente o erro, demonstrando capacidade de capturar padrões além de uma simples tendência histórica.
 
 ---
 
@@ -44,99 +195,228 @@ O modelo final, baseado em **Random Forest Regressor**, alcançou **MAPE de 11,2
 
 ## 1. Comparação de Modelos (MAPE)
 
-O gráfico apresenta o desempenho dos modelos avaliados durante a etapa de validação.
+O gráfico apresenta o desempenho dos modelos avaliados.
 
-O **Random Forest Base** apresentou o melhor resultado, alcançando **MAPE de 11,20%**, superando modelos alternativos e o baseline estatístico.
+O **Random Forest Base** apresentou o menor erro percentual, com **MAPE de 11,20%**.
 
 ![Comparação de Modelos](outputs/comparacao_modelos.png)
 
+---
 
 ## 2. Real vs Previsto – Período de Teste (jul–set/2023)
 
-Comparação entre os valores reais e previstos pelo modelo durante o período de teste.
+Comparação entre valores reais e previstos durante o período de validação.
 
-O resultado demonstra boa capacidade do modelo em acompanhar o comportamento histórico do faturamento.
+O resultado demonstra boa aderência do modelo ao comportamento observado.
 
 ![Real vs Previsto](outputs/real_vs_previsto_melhor_modelo.png)
 
+---
 
 ## 3. Previsão Futura – Próximos 3 Meses
 
-Projeção consolidada do faturamento para outubro, novembro e dezembro de 2023.
+Projeção consolidada para:
 
-O modelo identifica o comportamento esperado da série temporal, incluindo efeitos sazonais observados historicamente.
+- Outubro/2023;
+- Novembro/2023;
+- Dezembro/2023.
+
+O modelo identificou crescimento sazonal esperado no final do ano.
 
 ![Previsão Futura](outputs/previsao_futura.png)
 
 ---
 
-# 🚀 Como executar
+#  Previsões Futuras Geradas
 
-## Pré-requisitos
+| Período | Previsão |
+|---|---:|
+| Outubro/2023 | R$ 89,9 milhões |
+| Novembro/2023 | R$ 91,6 milhões |
+| Dezembro/2023 | R$ 104,6 milhões |
 
-- Python 3.11+
-- Git
+O crescimento observado em dezembro acompanha padrões sazonais identificados no histórico.
 
+---
 
-## Passos
+#  Benefícios Gerados pelo Projeto
 
-1. Clone o repositório:
+Além da construção do modelo preditivo, a solução trouxe benefícios analíticos e operacionais.
 
-```bash
-git clone https://github.com/seu-usuario/previsao-faturamento-varejo.git
+## Redução de análises manuais
 
-cd previsao-faturamento-varejo
+O pipeline automatiza o processo de geração das previsões, reduzindo esforço operacional e aumentando a reprodutibilidade.
+
+## Antecipação de cenários
+
+A previsão permite identificar antecipadamente possíveis períodos de crescimento ou redução de faturamento.
+
+## Planejamento comercial
+
+As previsões podem apoiar:
+
+- Definição de metas;
+- Planejamento de campanhas;
+- Distribuição de esforços comerciais;
+- Avaliação de oportunidades.
+
+## Gestão de estoque
+
+Uma previsão de demanda mais estruturada auxilia:
+
+- Preparação para períodos sazonais;
+- Redução do risco de ruptura;
+- Melhor planejamento de compras.
+
+## Tomada de decisão orientada por dados
+
+O projeto transforma milhões de registros históricos em uma ferramenta capaz de gerar informações estratégicas para diferentes áreas do negócio.
+
+---
+
+# ⚠️ Riscos do Modelo em Produção
+
+Apesar do desempenho apresentado, modelos preditivos precisam de acompanhamento contínuo.
+
+## Mudança no comportamento do consumidor
+
+Alterações de mercado, concorrência ou hábitos de compra podem modificar padrões históricos.
+
+## Mudanças comerciais
+
+Novas campanhas, alterações de preço ou mudanças no mix de produtos podem impactar a previsão.
+
+## Problemas na qualidade dos dados
+
+Dados incompletos, atrasados ou inconsistentes podem reduzir a confiabilidade das previsões.
+
+## Perda de performance ao longo do tempo
+
+O desempenho observado na validação pode diminuir conforme novos cenários aparecem.
+
+---
+
+# 🔄 Monitoramento em Produção
+
+Uma implementação produtiva deveria realizar acompanhamento mensal.
+
+Fluxo recomendado:
+
+```
+Faturamento Realizado
+        │
+        ▼
+Comparação com Previsão
+        │
+        ▼
+Cálculo do Erro
+        │
+        ▼
+Avaliação das Métricas
+        │
+        ▼
+Ações Corretivas
 ```
 
+Indicadores acompanhados:
 
-2. Crie e ative um ambiente virtual:
+- MAPE mensal;
+- WMAPE mensal;
+- Diferença entre previsto e realizado;
+- Alterações no comportamento das vendas.
 
-```bash
-python -m venv .venv
+---
 
-# Windows
-.\.venv\Scripts\activate
-```
+# 🚨 Plano de Ação Caso o Erro Aumente
 
+Caso o erro ultrapasse a meta definida:
 
-3. Instale as dependências:
+## 1. Investigar a causa
 
-```bash
-pip install -r requirements.txt
-```
+Avaliar:
 
+- Mudanças no mercado;
+- Alterações comerciais;
+- Qualidade dos dados;
+- Eventos fora do padrão.
 
-4. Certifique-se de que os arquivos necessários estejam disponíveis:
+## 2. Atualizar os dados
 
-```
-models/rf_model.pkl
-data/processed/df_mensal.csv
-data/processed/previsoes_futuras.csv
-```
+Realizar:
 
+- Inclusão dos novos períodos;
+- Revisão das variáveis;
+- Atualização da base histórica.
 
-5. Execute o dashboard:
+## 3. Reavaliar modelos
 
-```bash
-streamlit run app/app.py
-```
+Comparar novamente:
+
+- Random Forest;
+- XGBoost;
+- Novos algoritmos.
+
+## 4. Validar antes da substituição
+
+O novo modelo deve apresentar desempenho superior antes de entrar em produção.
+
+---
+
+# 🚀 Melhorias Futuras
+
+Algumas evoluções poderiam aumentar a capacidade preditiva da solução.
+
+## Inclusão de variáveis externas
+
+Adicionar informações como:
+
+- Feriados;
+- Datas comemorativas;
+- Campanhas promocionais;
+- Eventos;
+- Indicadores econômicos;
+- Estoque disponível.
+
+## Modelos específicos por loja
+
+Avaliar:
+
+- Modelos individuais;
+- Clusterização de lojas;
+- Modelos híbridos.
+
+## Integração com sistemas corporativos
+
+Possibilidades:
+
+- Dashboards corporativos;
+- Ferramentas de BI;
+- Sistemas de planejamento comercial;
+- Processos automatizados.
 
 ---
 
 # 📁 Estrutura do Projeto
 
 ```
-previsao-faturamento-varejo/
+previsao-faturamento/
 
 ├── app/
-│   └── app.py                 # Dashboard Streamlit
+│   └── app.py
 
 ├── data/
-│   ├── raw/                   # Dados brutos (não versionados)
-│   └── processed/             # Dados tratados e agregados
+│   ├── raw/
+│   │   └── Dados originais (não versionados)
+│   │
+│   ├── processed/
+│   │   └── Dados processados localmente
+│   │
+│   └── sample/
+│       ├── df_mensal.csv
+│       └── previsoes_futuras.csv
 
 ├── models/
-│   └── rf_model.pkl           # Modelo treinado
+│   └── rf_model.pkl
 
 ├── notebooks/
 │   ├── 01_exploracao_dados.ipynb
@@ -144,72 +424,90 @@ previsao-faturamento-varejo/
 │   └── 03_modelagem.ipynb
 
 ├── outputs/
-│   ├── gráficos
-│   └── métricas do projeto
+│   ├── comparacao_modelos.png
+│   ├── real_vs_previsto_melhor_modelo.png
+│   └── previsao_futura.png
 
 ├── src/
-│   ├── data_cleaning.py       # Tratamento dos dados
-│   ├── features.py            # Engenharia de atributos
-│   ├── model.py               # Treinamento do modelo
-│   ├── predict.py             # Geração das previsões
-│   └── utils.py               # Funções auxiliares
+│   ├── data_cleaning.py
+│   ├── features.py
+│   ├── model.py
+│   ├── predict.py
+│   └── utils.py
 
-├── .gitignore
-├── README.md
-└── requirements.txt
+├── main.py
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-# 📋 Tabela de Métricas
+# 🖥️ Dashboard Streamlit
 
-| Modelo | MAPE (%) |
-|-----------------------|----------|
-| Random Forest Base | 11,20 |
-| Random Forest Tunado | 11,87 |
-| XGBoost | 12,28 |
-| Baseline MM3 | 14,75 |
+Executar:
 
----
+```bash
+streamlit run app/app.py
+```
 
-# 🖥️ Dashboard
+Funcionalidades:
 
-O dashboard permite explorar os resultados do modelo através de:
-
-- Previsões futuras consolidadas.
-- Previsões individuais por loja.
-- Histórico mensal de faturamento.
-- Comparação de modelos.
-- Métricas de desempenho.
-- Análise da importância das variáveis utilizadas pelo modelo.
-
+- Previsões futuras;
+- Histórico x previsto;
+- Métricas do modelo;
+- Filtro por loja;
+- Importância das variáveis.
 
 ---
 
-# 🧠 Principais Insights do Modelo
+# ▶️ Como Executar o Projeto
 
-As variáveis que mais contribuíram para a previsão foram:
+## Criar ambiente virtual
 
-- Faturamento do mês anterior (`lag_1_mes`).
-- Faturamento dos meses anteriores (`lag_2_meses` e `lag_3_meses`).
-- Taxa de crescimento histórica.
-- Média móvel dos últimos meses.
-- Identificador da loja.
+```bash
+python -m venv .venv
+```
 
-Esses resultados mostram que o comportamento recente do faturamento possui forte influência na previsão futura.
+## Ativar ambiente
 
+Windows:
+
+```bash
+.\.venv\Scripts\activate
+```
+
+## Instalar dependências
+
+```bash
+pip install -r requirements.txt
+```
+
+## Executar pipeline
+
+```bash
+python main.py
+```
+
+## Executar dashboard
+
+```bash
+streamlit run app/app.py
+```
 
 ---
 
 # 👤 Desenvolvido por
 
-Felipe Tamiozzo - Felipe Barbosa - Kilian Israel
+Felipe Tamiozzo  
+Felipe Barbosa  
+Kilian Israel  
 
 Projeto de Ciência de Dados aplicado à previsão de faturamento utilizando Machine Learning.
-
 
 ---
 
 # 📄 Licença
 
 Projeto desenvolvido para fins de estudo, portfólio e demonstração técnica.
+````
+
