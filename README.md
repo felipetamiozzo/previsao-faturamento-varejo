@@ -1,5 +1,4 @@
 
-````markdown
 # 📈 Projeto de Previsão de Faturamento com Machine Learning
 
 ## Contexto do Projeto
