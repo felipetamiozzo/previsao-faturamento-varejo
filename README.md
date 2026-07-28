@@ -1,26 +1,47 @@
 
 # 📈 Projeto de Previsão de Faturamento com Machine Learning
 
-## Contexto do Projeto
+# 📌 Resumo Executivo
+
+Projeto de Ciência de Dados desenvolvido para previsão de faturamento mensal no varejo utilizando Machine Learning.
+
+A solução foi construída a partir de uma base transacional contendo **milhões de registros de vendas antes do processamento**, passando por etapas de exploração, tratamento, consolidação, engenharia de atributos e modelagem preditiva.
+
+O objetivo foi transformar dados históricos em uma ferramenta capaz de antecipar cenários futuros de faturamento, apoiando decisões relacionadas a planejamento comercial, estoque, campanhas promocionais e gestão estratégica.
+
+Principais resultados:
+
+✅ Processamento e análise de milhões de registros transacionais;
+✅ Pipeline completo de Machine Learning;
+✅ Comparação entre diferentes algoritmos preditivos;
+✅ Modelo final baseado em Random Forest Regressor;
+✅ MAPE de **11,20%** na validação temporal;
+✅ WMAPE de **8,63%**;
+✅ Dashboard interativo desenvolvido em Streamlit;
+✅ Estrutura preparada para evolução em ambiente produtivo.
+
+---
+
+# Contexto do Projeto
 
 Este projeto foi desenvolvido a partir de um cenário real de negócio envolvendo **previsão de faturamento no varejo**, utilizando dados históricos de vendas e técnicas de Machine Learning.
 
 O desafio consistia em transformar grandes volumes de dados transacionais em uma solução capaz de prever o faturamento futuro, reduzindo análises manuais e permitindo maior agilidade no planejamento comercial.
 
-A base inicial continha **milhões de registros de vendas antes do processamento**, passando posteriormente por etapas de exploração, validação, tratamento, consolidação e engenharia de atributos até ser transformada em uma série temporal adequada para modelagem preditiva.
+A base inicial continha milhões de registros de vendas antes do processamento, sendo posteriormente tratada, validada e consolidada em uma série temporal mensal adequada para modelagem preditiva.
 
-Como solução, foi desenvolvido um pipeline completo de Ciência de Dados capaz de prever o **faturamento líquido mensal por loja**, utilizando Machine Learning para apoiar decisões relacionadas a:
+Como solução, foi desenvolvido um pipeline completo de Ciência de Dados capaz de prever o **faturamento líquido mensal por loja**, utilizando Machine Learning para apoiar:
 
-- Planejamento comercial;
-- Gestão de estoque;
-- Campanhas promocionais;
-- Definição de metas;
-- Tomada de decisão orientada por dados.
+* Planejamento comercial;
+* Gestão de estoque;
+* Campanhas promocionais;
+* Definição de metas;
+* Tomada de decisão orientada por dados.
 
-O modelo final, baseado em **Random Forest Regressor**, alcançou:
+O modelo final, baseado em **Random Forest Regressor**, apresentou:
 
-- **MAPE: 11,20%**
-- **WMAPE: 8,63%**
+* **MAPE: 11,20%**
+* **WMAPE: 8,63%**
 
 durante a validação temporal.
 
@@ -30,16 +51,16 @@ durante a validação temporal.
 
 Desenvolver uma solução preditiva capaz de estimar o faturamento futuro utilizando dados históricos de vendas, permitindo antecipar tendências e apoiar decisões estratégicas.
 
-A solução contempla todo o ciclo de um projeto de Machine Learning:
+A solução contempla todo o ciclo de desenvolvimento de Machine Learning:
 
-- Exploração dos dados;
-- Tratamento e validação;
-- Engenharia de atributos;
-- Treinamento de modelos;
-- Comparação de algoritmos;
-- Avaliação de métricas;
-- Geração de previsões futuras;
-- Disponibilização através de dashboard interativo.
+* Exploração dos dados;
+* Tratamento e validação;
+* Engenharia de atributos;
+* Treinamento de modelos;
+* Comparação de algoritmos;
+* Avaliação de métricas;
+* Geração de previsões futuras;
+* Disponibilização dos resultados através de dashboard interativo.
 
 ---
 
@@ -49,27 +70,27 @@ A solução contempla todo o ciclo de um projeto de Machine Learning:
 
 A aplicação permite visualizar:
 
-- Previsão consolidada dos próximos meses;
-- Previsão individual por loja;
-- Histórico de faturamento;
-- Comparação entre valores reais e previstos;
-- Métricas dos modelos avaliados;
-- Importância das variáveis utilizadas.
+* Previsão consolidada dos próximos meses;
+* Previsão individual por loja;
+* Histórico de faturamento;
+* Comparação entre valores reais e previstos;
+* Métricas dos modelos avaliados;
+* Importância das variáveis utilizadas.
 
 ## Pipeline de Machine Learning
 
 O projeto possui uma estrutura automatizada para:
 
-- Carregamento dos dados;
-- Tratamento das informações;
-- Criação das variáveis temporais;
-- Treinamento do modelo;
-- Salvamento do modelo treinado;
-- Geração das previsões.
+* Carregamento dos dados;
+* Tratamento das informações;
+* Criação das variáveis temporais;
+* Treinamento do modelo;
+* Salvamento do modelo treinado;
+* Geração das previsões.
 
 ---
 
-#  Arquitetura da Solução
+# 🏗️ Arquitetura da Solução
 
 Fluxo desenvolvido:
 
@@ -105,86 +126,101 @@ Dashboard Streamlit
 
 # 🔎 Análises e Insights Gerados
 
-Durante a etapa exploratória foram identificados diversos comportamentos relevantes.
+Durante a etapa exploratória foram identificados comportamentos relevantes para a modelagem.
 
 ## Influência do histórico recente
 
-As variáveis relacionadas ao faturamento dos meses anteriores apresentaram maior importância para o modelo.
+As variáveis relacionadas ao faturamento dos meses anteriores apresentaram maior importância no modelo.
 
 Isso demonstra que o comportamento recente da receita possui forte capacidade de explicar o faturamento futuro.
 
+Principais variáveis:
+
+* Faturamento do mês anterior (`lag_1_mes`);
+* Faturamento dos meses anteriores (`lag_2_meses` e `lag_3_meses`);
+* Média móvel;
+* Taxa de crescimento histórica.
+
+---
+
 ## Padrões sazonais
 
-O modelo conseguiu capturar variações temporais presentes no histórico, permitindo identificar períodos com maior ou menor tendência de faturamento.
+O modelo conseguiu capturar variações temporais presentes no histórico, identificando períodos de maior e menor tendência de faturamento.
+
+Esse comportamento foi especialmente relevante para períodos sazonais, como o crescimento esperado no final do ano.
+
+---
 
 ## Diferenças entre lojas
 
 A identificação da loja apresentou relevância no modelo, indicando que cada unidade possui características próprias de comportamento.
 
+Isso permite previsões mais adequadas considerando particularidades individuais.
+
+---
+
 ## Tratamento de registros negativos
 
 Durante a análise dos dados foi identificado que registros negativos não deveriam ser avaliados apenas pelo valor bruto.
 
-Existiam situações em que:
+Foram encontrados casos onde:
 
-- O valor bruto era positivo;
-- O valor bruto era zero;
-- Porém o faturamento líquido final era negativo.
+* O valor bruto era positivo;
+* O valor bruto era zero;
+* Porém o faturamento líquido final apresentava impacto negativo.
 
-Por isso, a modelagem utilizou como variável objetivo o:
+Por isso, a variável objetivo utilizada na modelagem foi:
 
 **Faturamento Líquido Final**
 
-garantindo maior consistência na previsão.
+Essa decisão evitou distorções e garantiu maior consistência na previsão.
 
 ---
 
-#  Engenharia de Atributos
+# ⚙️ Engenharia de Atributos
 
 Foram criadas variáveis capazes de representar comportamento histórico e tendência:
 
-- Faturamento do mês anterior (`lag_1_mes`);
-- Faturamento de dois meses anteriores (`lag_2_meses`);
-- Faturamento de três meses anteriores (`lag_3_meses`);
-- Média móvel dos últimos meses;
-- Taxa de crescimento;
-- Variáveis temporais;
-- Identificação da loja.
+* Faturamento do mês anterior (`lag_1_mes`);
+* Faturamento de dois meses anteriores (`lag_2_meses`);
+* Faturamento de três meses anteriores (`lag_3_meses`);
+* Média móvel dos últimos meses;
+* Taxa de crescimento;
+* Variáveis temporais;
+* Identificação da loja.
 
-Esses atributos permitiram ao modelo aprender padrões históricos de comportamento.
+Esses atributos permitiram ao modelo aprender padrões históricos e tendências de comportamento.
 
 ---
 
-#  Modelos Avaliados
+# 🤖 Modelos Avaliados
 
 Foram comparados diferentes algoritmos:
 
-| Modelo | MAPE (%) |
-|---|---:|
-| Random Forest Base | **11,20** |
-| Random Forest Tunado | 11,87 |
-| XGBoost | 12,28 |
-| Baseline Média Móvel | 14,75 |
+| Modelo               |  MAPE (%) |
+| -------------------- | --------: |
+| Random Forest Base   | **11,20** |
+| Random Forest Tunado |     11,87 |
+| XGBoost              |     12,28 |
+| Baseline Média Móvel |     14,75 |
 
 ---
 
 #  Modelo Final Escolhido
 
-O modelo selecionado foi:
-
 ## Random Forest Regressor
 
 Desempenho obtido:
 
-- **MAPE: 11,20%**
-- **WMAPE: 8,63%**
+* **MAPE: 11,20%**
+* **WMAPE: 8,63%**
 
 Motivos da escolha:
 
-- Menor erro entre os modelos avaliados;
-- Boa capacidade de capturar padrões históricos;
-- Maior estabilidade;
-- Boa relação entre desempenho e interpretabilidade.
+* Menor erro entre os modelos avaliados;
+* Boa capacidade de capturar padrões históricos;
+* Estabilidade nas previsões;
+* Boa relação entre desempenho e interpretabilidade.
 
 Comparado ao baseline de média móvel, o modelo conseguiu reduzir significativamente o erro, demonstrando capacidade de capturar padrões além de uma simples tendência histórica.
 
@@ -202,11 +238,9 @@ O **Random Forest Base** apresentou o menor erro percentual, com **MAPE de 11,20
 
 ---
 
-## 2. Real vs Previsto – Período de Teste (jul–set/2023)
+## 2. Real vs Previsto – Período de Teste
 
 Comparação entre valores reais e previstos durante o período de validação.
-
-O resultado demonstra boa aderência do modelo ao comportamento observado.
 
 ![Real vs Previsto](outputs/real_vs_previsto_melhor_modelo.png)
 
@@ -214,29 +248,30 @@ O resultado demonstra boa aderência do modelo ao comportamento observado.
 
 ## 3. Previsão Futura – Próximos 3 Meses
 
-Projeção consolidada para:
+Previsão consolidada para:
 
-- Outubro/2023;
-- Novembro/2023;
-- Dezembro/2023.
-
-O modelo identificou crescimento sazonal esperado no final do ano.
+* Outubro/2023;
+* Novembro/2023;
+* Dezembro/2023.
 
 ![Previsão Futura](outputs/previsao_futura.png)
 
 ---
 
-#  Previsões Futuras Geradas
+# Previsões Futuras Geradas
 
-| Período | Previsão |
-|---|---:|
-| Outubro/2023 | R$ 89,9 milhões |
-| Novembro/2023 | R$ 91,6 milhões |
+| Período       |         Previsão |
+| ------------- | ---------------: |
+| Outubro/2023  |  R$ 89,9 milhões |
+| Novembro/2023 |  R$ 91,6 milhões |
 | Dezembro/2023 | R$ 104,6 milhões |
 
 O crescimento observado em dezembro acompanha padrões sazonais identificados no histórico.
 
 ---
+
+(continua na próxima mensagem com: Benefícios, Produção, Monitoramento, Melhorias Futuras, Estrutura, Execução e Licença)
+
 
 #  Benefícios Gerados pelo Projeto
 
