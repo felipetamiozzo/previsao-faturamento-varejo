@@ -384,7 +384,7 @@ with tab1:
 
             fig,
 
-            width="stretch"
+            use_container_width=True
 
         )
 
@@ -430,7 +430,7 @@ with tab1:
 
             ),
 
-            width="stretch"
+            use_container_width=True
 
         )
 
@@ -533,7 +533,7 @@ with tab1:
 
                 fig_loja,
 
-                width="stretch"
+                use_container_width=True
 
             )
 
@@ -626,7 +626,7 @@ with tab2:
 
             fig,
 
-            width="stretch"
+            use_container_width=True
 
         )
 
@@ -769,7 +769,7 @@ with tab3:
 
         fig,
 
-        width="stretch"
+        use_container_width=True
 
     )
 
@@ -826,7 +826,7 @@ with tab4:
 
                 img,
 
-                width="stretch"
+                use_container_width=True
 
             )
 
